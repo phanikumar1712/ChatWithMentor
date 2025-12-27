@@ -1,11 +1,16 @@
 # =========================
 # Python / FastAPI
 # =========================
-backend/venv
+# Python virtual environments
 venv/
 .venv/
+backend/venv/
+
+
+# Python cache
 __pycache__/
-*.py[cod]
+*.pyc
+ 
 *.pyo
 .pytest_cache/
 .mypy_cache/
