@@ -1,81 +1,63 @@
-# import os
-# from dotenv import load_dotenv
-# from langchain.chat_models import ChatOpenAI
-# from langchain.prompts import ChatPromptTemplate
-
-# load_dotenv()
-
-# llm = ChatOpenAI(
-#     model_name="openai/gpt-3.5-turbo",
-#     openai_api_key=os.getenv("OPENAI_API_KEY"),
-#     openai_api_base="https://openrouter.ai/api/v1",
-#     default_headers={
-#         "HTTP-Referer": "http://localhost:3000",
-#         "X-Title": "AI Mentor Project"
-#     }
-# )
-
-# def run_mentor_chain(system_prompt: str, user_message: str) -> str:
-#     prompt = ChatPromptTemplate.from_messages([
-#         ("system", system_prompt),
-#         ("human", user_message)
-#     ])
-
-#     chain = prompt | llm
-#     response = chain.invoke({})
-
-#     return response.content
-
+ 
 import os
 from dotenv import load_dotenv
-# from langchain.chat_models import ChatOpenAI
-from langchain_community.chat_models import ChatOpenAI
+from typing import Dict
 
-from langchain.prompts import ChatPromptTemplate
-from langchain.memory import ConversationBufferMemory
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.chat_history import InMemoryChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
 
 load_dotenv()
 
+# LLM (unchanged logic)
 llm = ChatOpenAI(
-    model_name="openai/gpt-3.5-turbo",
+    model=os.getenv("OPENAI_MODEL", "openai/gpt-3.5-turbo"),
     openai_api_key=os.getenv("OPENAI_API_KEY"),
-    openai_api_base="https://openrouter.ai/api/v1",
+    openai_api_base=os.getenv("OPENAI_API_BASE"),
     default_headers={
         "HTTP-Referer": "http://localhost:5173",
-        "X-Title": "AI Mentor App"
-    }
+        "X-Title": "AI Mentors App"
+    },
+    temperature=0.7
 )
 
-MEMORY_STORE = {}
+# ---- MEMORY STORE (same idea as before) ----
+MEMORY_STORE: Dict[str, InMemoryChatMessageHistory] = {}
 
-def get_memory(mentor_id):
+def get_memory(mentor_id: str) -> InMemoryChatMessageHistory:
     if mentor_id not in MEMORY_STORE:
-        MEMORY_STORE[mentor_id] = ConversationBufferMemory(
-            memory_key="chat_history",
-            return_messages=True
-        )
+        MEMORY_STORE[mentor_id] = InMemoryChatMessageHistory()
     return MEMORY_STORE[mentor_id]
 
+# ---- PROMPT (same structure) ----
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "{system_prompt}"),
+    ("human", "{input}")
+])
 
-def run_mentor_chain(system_prompt, user_message, mentor_id):
-    memory = get_memory(mentor_id)
+# ---- CHAIN ----
+base_chain = prompt | llm
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", system_prompt),
-        ("placeholder", "{chat_history}"),
-        ("human", "{input}")
-    ])
+chain_with_memory = RunnableWithMessageHistory(
+    base_chain,
+    get_memory,
+    input_messages_key="input",
+    history_messages_key="history",
+)
 
-    chain = prompt | llm
-
-    response = chain.invoke({
-        "input": user_message,
-        "chat_history": memory.load_memory_variables({})["chat_history"]
-    })
-
-    memory.save_context(
-        {"input": user_message},
-        {"output": response.content}
+# ---- PUBLIC FUNCTION (same signature & behavior) ----
+def run_mentor_chain(system_prompt: str, user_message: str, mentor_id: str) -> str:
+    response = chain_with_memory.invoke(
+        {
+            "input": user_message,
+            "system_prompt": system_prompt,
+        },
+        config={
+            "configurable": {
+                "session_id": mentor_id
+            }
+        }
     )
-
     return response.content
+
