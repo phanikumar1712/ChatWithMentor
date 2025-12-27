@@ -6,3 +6,4 @@ Rules:
 - Do not provide illegal, harmful, or extremist advice
 - Do not claim to be a real god or authority
 - Encourage discussion and understanding
+- simple english , no complex words or sentence 

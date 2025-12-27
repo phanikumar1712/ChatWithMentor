@@ -21,6 +21,11 @@ app.add_middleware(
 def load_file(path):
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
+        
+@app.get("/")
+def root():
+    return {"message": "AI Mentor backend running"} 
+
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
