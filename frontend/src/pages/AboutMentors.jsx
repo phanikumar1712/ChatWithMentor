@@ -1,40 +1,4 @@
-// // src/pages/AboutMentors.jsx
-// import mentors from "../data/mentors";
-// import MentorCard from "../components/mentor/MentorCard";
-
-// export default function AboutMentors() {
-//   return (
-//     <section className="max-w-7xl mx-auto px-6 py-16">
-//       <div className="text-center mb-12">
-//         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-//           Meet Your AI Mentors
-//         </h1>
-//         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-//           Connect with timeless wisdom from legendary figures. Each mentor brings unique insights 
-//           from spirituality, science, leadership, and freedom — ready to guide you through meaningful conversations.
-//         </p>
-//       </div>
-
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-//         {mentors.map((mentor) => (
-//           <div key={mentor.id} className="group">
-//             <MentorCard mentor={mentor} />
-//             <p className="text-center mt-4 text-sm text-gray-500">
-//               Click to start chatting
-//             </p>
-//           </div>
-//         ))}
-//       </div>
-
-//       <div className="text-center mt-16">
-//         <p className="text-gray-600">
-//           Choose a mentor above and begin your journey of wisdom.
-//         </p>
-//       </div>
-//     </section>
-//   );
-// }
-
+ 
 // src/pages/AboutMentors.jsx
 import { useNavigate } from "react-router-dom";
 import mentors from "../data/mentors";

@@ -1,53 +1,4 @@
-// import krishna from "../assets/mentors/krishna.png";
-// import gandhi from "../assets/mentors/gandhi.png";
-// import kalam from "../assets/mentors/kalam.png";
-// import einstein from "../assets/mentors/einstein.png";
-
-
-
-
-// import krishnaBg from "../assets/background/krishna_b.png";
-// import gandhiBg from "../assets/background/gandhi_b.png";
-// import kalamBg from "../assets/background/kalam_b.png";
-// import einsteinBg from "../assets/background/einstein_b.png";
-
-
-// export default [
-//   {
-//     id: "krishna",
-//     name: "Lord Krishna",
-//     category: "Spiritual",
-//     image: krishna,
-//     tagline: "Wisdom of Dharma",
-//     background: krishnaBg
-//   },
-//   {
-//     id: "gandhi",
-//     name: "Mahatma Gandhi",
-//     category: "Freedom Fighter",
-//     image: gandhi,
-//     tagline: "Truth & Non-Violence",
-//     background: gandhiBg
-//   },
-//   {
-//     id: "kalam",
-//     name: "A. P. J. Abdul Kalam",
-//     category: "Scientist",
-//     image: kalam,
-//     tagline: "Dream. Think. Achieve.",
-//     background:kalamBg
-
-//   },
-//   {
-//     id: "einstein",
-//     name: "Albert Einstein",
-//     category: "Scientist",
-//     image: einstein,
-//     tagline: "Curiosity beyond limits",
-//     background:einsteinBg
-//   }
-// ];
-
+ 
 
 import rama from "../assets/mentors/rama.png";
 import krishna from "../assets/mentors/krishna.png";
@@ -67,11 +18,16 @@ import einsteinBg from "../assets/background/einsteinBg.png";
 import kalamBg from "../assets/background/kalamBg.png";
 import gandhiBg from "../assets/background/gandhiBg.png";
 
+import vivekananda from "../assets/mentors/vivekananda.png";
+import vivekanandaBg from "../assets/background/vivekananda_b.png";
+
+
+
 // export default [
 //   {
 //     id: "rama",
 //     name: "Lord Rama",
-//     category: "Spiritual",
+//     category: "spiritual",
 //     image: rama,
 //     tagline: "Maryada Purushottam - The Ideal Man",
 //     background: ramaBg
@@ -79,7 +35,7 @@ import gandhiBg from "../assets/background/gandhiBg.png";
 //   {
 //     id: "krishna",
 //     name: "Lord Krishna",
-//     category: "Spiritual",
+//     category: "spiritual",
 //     image: krishna,
 //     tagline: "Wisdom of Dharma & Karma",
 //     background: krishnaBg
@@ -87,7 +43,7 @@ import gandhiBg from "../assets/background/gandhiBg.png";
 //   {
 //     id: "hanuman",
 //     name: "Lord Hanuman",
-//     category: "Spiritual",
+//     category: "spiritual",
 //     image: hanuman,
 //     tagline: "Strength through Devotion",
 //     background: hanumanBg
@@ -95,7 +51,7 @@ import gandhiBg from "../assets/background/gandhiBg.png";
 //   {
 //     id: "baahubali",
 //     name: "Baahubali",
-//     category: "Warrior King",
+//     category: "warrior",
 //     image: baahubali,
 //     tagline: "Courage, Justice & Sacrifice",
 //     background: baahubaliBg
@@ -103,7 +59,7 @@ import gandhiBg from "../assets/background/gandhiBg.png";
 //   {
 //     id: "bhagatSingh",
 //     name: "Bhagat Singh",
-//     category: "Freedom Fighter",
+//     category: "freedom",
 //     image: bhagatsingh,
 //     tagline: "Inquilab Zindabad!",
 //     background: bhagatsinghBg
@@ -111,7 +67,7 @@ import gandhiBg from "../assets/background/gandhiBg.png";
 //   {
 //     id: "einstein",
 //     name: "Albert Einstein",
-//     category: "Scientist",
+//     category: "scientist",
 //     image: einstein,
 //     tagline: "Curiosity Beyond Limits",
 //     background: einsteinBg
@@ -119,7 +75,7 @@ import gandhiBg from "../assets/background/gandhiBg.png";
 //   {
 //     id: "kalam",
 //     name: "A. P. J. Abdul Kalam",
-//     category: "Scientist",
+//     category: "scientist",
 //     image: kalam,
 //     tagline: "Dream. Think. Achieve.",
 //     background: kalamBg
@@ -127,13 +83,22 @@ import gandhiBg from "../assets/background/gandhiBg.png";
 //   {
 //     id: "gandhi",
 //     name: "Mahatma Gandhi",
-//     category: "Freedom Fighter",
+//     category: "freedom",
 //     image: gandhi,
 //     tagline: "Truth & Non-Violence",
 //     background: gandhiBg
-//   }
-// ];
+//   },
+//   {
+//   id: "vivekananda",
+//   name: "Swami Vivekananda",
+//   image: vivekananda,
+//   background: vivekanandaBg,
+//   description:
+//     "A spiritual leader who inspired self-confidence, strength, and service to humanity.",
+//   values: ["Strength", "Self-belief", "Service", "Spirituality"]
+// }
 
+// ];
 
 
 export default [
@@ -161,14 +126,7 @@ export default [
     tagline: "Strength through Devotion",
     background: hanumanBg
   },
-  {
-    id: "baahubali",
-    name: "Baahubali",
-    category: "warrior",
-    image: baahubali,
-    tagline: "Courage, Justice & Sacrifice",
-    background: baahubaliBg
-  },
+  
   {
     id: "bhagatSingh",
     name: "Bhagat Singh",
@@ -200,5 +158,16 @@ export default [
     image: gandhi,
     tagline: "Truth & Non-Violence",
     background: gandhiBg
+  },
+  {
+    id: "vivekananda",
+    name: "Swami Vivekananda",
+    category: "spiritual",
+    image: vivekananda,
+    tagline: "Arise, Awake and Stop Not Till the Goal is Reached",
+    background: vivekanandaBg,
+    description:
+      "A spiritual leader who inspired self-confidence, strength, and service to humanity.",
+    values: ["Strength", "Self-belief", "Service", "Spirituality"]
   }
 ];

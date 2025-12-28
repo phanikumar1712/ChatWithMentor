@@ -77,11 +77,11 @@ export default function CategoryMenu() {
             Freedom Fighters
           </li>
 
-          <li
+          {/* <li
             onClick={() => goToCategory("warrior")}
             className="px-4 py-2 cursor-pointer hover:bg-indigo-50">
             Warrior Kings
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>
