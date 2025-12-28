@@ -9,3 +9,4 @@ def build_system_prompt(base_prompt, safety_prompt, persona_prompt, mentor):
 Tone: {mentor['tone']}
 Core values: {', '.join(mentor['values'])}
 """
+ 

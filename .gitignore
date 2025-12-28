@@ -5,7 +5,9 @@
 venv/
 .venv/
 backend/venv/
-
+# Python
+__pycache__/
+*.pyc
 # Python packaging
 *.egg-info/
 

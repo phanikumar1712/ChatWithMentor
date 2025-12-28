@@ -1,44 +1,3 @@
-
-
-// import { useNavigate } from "react-router-dom";
-
-// export default function ChatHeader({ mentorName, mentorImage }) {
-//   const navigate = useNavigate();
-
-//   return (
-//     <div className="flex items-center gap-3 px-4 py-3 bg-white/90 backdrop-blur border-b">
-
-//       {/* ← Back Button */}
-//       <button
-//         onClick={() => navigate("/mentors")}
-//         className="text-gray-600 hover:text-gray-900 text-xl font-semibold"
-//         aria-label="Back to mentors"
-//       >
-//         ←
-//       </button>
-
-//       {/* Mentor Avatar */}
-//       <img
-//         src={mentorImage}
-//         alt={mentorName}
-//         className="h-10 w-10 rounded-full object-cover border"
-//       />
-
-//       {/* Mentor Info */}
-//       <div className="flex flex-col">
-//         <span className="font-semibold text-gray-900 leading-tight">
-//           {mentorName}
-//         </span>
-//         <span className="text-xs text-green-600">
-//           Online
-//         </span>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
 import { useNavigate } from "react-router-dom";
 import backIcon from "../../assets/back.png";
 
@@ -46,18 +5,38 @@ export default function ChatHeader({ mentorName, mentorImage }) {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center gap-3 px-4 py-4 bg-white/90 backdrop-blur border-b">
+    <div className="flex items-center gap-4 px-5 py-4 
+                    bg-white/80 backdrop-blur-md 
+                    border-b border-gray-200">
 
       {/* Back Button */}
       <button
         onClick={() => navigate("/mentors")}
-        className="p-2 rounded-full hover:bg-gray-100 active:bg-gray-200 transition"
         aria-label="Back to mentors"
+        className="
+          group
+          relative
+          flex items-center justify-center
+          h-10 w-10
+          rounded-full
+          bg-gray-100/70
+          hover:bg-indigo-50
+          active:bg-indigo-100
+          transition-all duration-200
+          hover:scale-105
+          active:scale-95
+          cursor-pointer
+        "
       >
         <img
           src={backIcon}
           alt="Back"
-          className="h-5 w-5 object-contain"
+          className="
+            h-5 w-5
+            object-contain
+            transition-transform duration-200
+            group-hover:-translate-x-0.5
+          "
         />
       </button>
 
@@ -65,18 +44,19 @@ export default function ChatHeader({ mentorName, mentorImage }) {
       <img
         src={mentorImage}
         alt={mentorName}
-        className="h-10 w-10 rounded-full object-cover border"
+        className="
+          h-11 w-11
+          rounded-full
+          object-cover
+          border border-gray-300
+          shadow-sm
+        "
       />
 
-      {/* Mentor Info */}
-      <div className="flex flex-col">
-        <span className="font-semibold text-gray-900 leading-tight">
-          {mentorName}
-        </span>
-        <span className="text-xs text-green-600">
-          Online
-        </span>
-      </div>
+      {/* Mentor Name */}
+      <span className="font-semibold text-gray-900">
+        {mentorName}
+      </span>
     </div>
   );
 }

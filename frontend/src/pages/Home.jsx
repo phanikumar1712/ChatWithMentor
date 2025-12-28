@@ -76,8 +76,7 @@ export default function Home() {
 
       {/* Minimal meaningful text - just above search */}
       <p className="text-center text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
-        Connect with timeless wisdom from legendary figures — spiritual guides, scientists, and leaders — 
-        brought to life through AI. Find the mentor who resonates with you.
+        Connect with mentors inspired by history’s greatest minds and gain guidance for life, decisions, and personal growth through AI conversations.
       </p>
 
       {/* Search Bar */}
