@@ -13,7 +13,7 @@ export default function Header() {
         {/* Brand */}
         <div className="flex flex-col">
           <span className="text-2xl font-bold text-indigo-600 tracking-tight">
-            Ideotalks
+            ChatWithMentors
           </span>
           {/* <span className="text-xs text-gray-500">
             Wisdom across time, one conversation at a time

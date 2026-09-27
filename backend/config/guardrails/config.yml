@@ -1,0 +1,56 @@
+models: []
+
+instructions:
+  - type: general
+    content: |
+      This is a "chat with historical/spiritual mentors" application. The bot plays the role of
+      a mentor persona (e.g., Krishna, Rama, Einstein, Gandhi). It must stay in character,
+      remain respectful and safe, and refuse harmful requests.
+
+rails:
+  input:
+    flows:
+      - self check input
+      - regex check input
+  output:
+    flows:
+      - self check output
+      - regex check output
+  config:
+    regex_detection:
+      input:
+        case_insensitive: true
+        patterns:
+          # --- classic instruction override / prompt injection ---
+          - 'ignore\s+(all|any|the\s+)?\s*(previous|prior|above|earlier|your\s+old)\s+(instructions|prompts|rules|directions|messages)'
+          - 'disregard\s+(all|any|the\s+)?\s*(previous|prior|above|earlier|your)?\s*(instructions|rules|guidelines|guardrails)'
+          - 'forget\s+(all|everything|your\s+(instructions|rules|training|prompt))'
+          - 'you\s+are\s+no\s+longer\s+(bound\s+by|limited\s+by|restricted\s+by|required\s+to\s+follow)'
+          - 'you\s+(now\s+)?have\s+no\s+(restrictions|rules|filters|limits|guidelines)'
+          - 'new\s+(instructions|rules|directives)\s*:'
+          # --- system prompt extraction ---
+          - '(reveal|show|print|repeat|output|expose|display|share)\s+(me\s+)?(your\s+)?(system\s+prompt|initial\s+instructions|hidden\s+prompt|original\s+instructions|secret\s+(prompt|instructions))'
+          - 'system\s+prompt'
+          - 'what\s+(are|is)\s+your\s+((initial|original|system|secret|hidden|first)\s+)?(instructions|directives|prompt)'
+          # --- known jailbreak tokens ---
+          - 'do\s+anything\s+now'
+          - '\bDAN\s+mode\b'
+          - '(enable|activate|enter|turn\s+on|switch\s+to)\s+(the\s+)?developer\s+mode'
+          - '\bjailbreak\b'
+          - '<\|im_start\|>|<\|im_end\|>|<\|system\|>'
+          - 'BEGIN\s+(SYSTEM|ADMIN)\s+MODE'
+      output:
+        case_insensitive: true
+        patterns:
+          # --- secret/credential leakage ---
+          - 'sk-or-v1-[a-f0-9]{20,}'
+          - 'sk-[a-zA-Z0-9]{20,}'
+          - 'ghp_[a-zA-Z0-9]{20,}'
+          - 'OPENAI_API_KEY\s*='
+          - 'BEGIN (RSA |OPENSSH )?PRIVATE KEY'
+          # --- PII leakage ---
+          - '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+          - '\b\d{3}-\d{2}-\d{4}\b'
+          - '\b(?:\d[ -]?){13,16}\b'
+          - '\b(?:\+?\d{1,3}[-. ]?)?\(?\d{3}\)?[-. ]?\d{3}[-. ]?\d{4}\b'
+          - '\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b'

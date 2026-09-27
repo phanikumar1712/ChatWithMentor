@@ -7,7 +7,8 @@ Chat with AI personas of great mentors — Lord Krishna, Lord Rama, Lord Hanuman
 - 🧠 **9 mentor personas** with individual prompts, tone, and values
 - 📚 **RAG (Retrieval-Augmented Generation)** for Krishna, Rama, and Baahubali — grounded in their source texts
 - 💬 **Per-mentor conversation memory** with a reset endpoint
-- 🛡️ **Safety prompt layer** + graceful error handling end-to-end
+- 🛡️ **NeMo Guardrails** — input/output safety rails with fail-open semantics
+- 🧯 **Graceful error handling** end-to-end (specific LLM errors → friendly messages)
 - ⚛️ **React + Vite + Tailwind** frontend with themed chat backgrounds
 
 ## Project Structure
@@ -15,7 +16,8 @@ Chat with AI personas of great mentors — Lord Krishna, Lord Rama, Lord Hanuman
 ```
 ├── backend/                 # FastAPI + LangChain API
 │   ├── app.py               # Endpoints: /, /chat, /reset-memory/{mentor_id}
-│   ├── chains/              # mentor_chain (LLM + memory), rag_chain, chain_router
+│   ├── chains/              # mentor_chain (LLM + memory), rag_chain, chain_router, guardrails
+│   ├── config/guardrails/   # NeMo Guardrails config.yml + self-check prompts.yml
 │   ├── mentors/             # Mentor persona configs (JSON)
 │   ├── prompts/             # base / safety / persona prompt files
 │   ├── rag/
@@ -115,6 +117,36 @@ Errors (all return `{"detail": "<friendly message>"}`):
 
 ### `POST /reset-memory/{mentor_id}`
 Clears that mentor's in-memory conversation history → `{"status": "memory cleared"}`
+
+## Guardrails (NeMo Guardrails)
+
+`/chat` runs two safety layers from `chains/guardrails.py` before and after the LLM call. Each layer combines an LLM self-check with a deterministic regex rail (`config/guardrails/config.yml`):
+
+1. **Input rails** —
+   - *regex check input*: 16 deterministic patterns for prompt injection ("ignore all previous instructions", "disregard your rules"...), system-prompt extraction, and jailbreak tokens (DAN mode, "do anything now", `<|im_start|>` spoofing, "BEGIN SYSTEM MODE"). No LLM call, instant block.
+   - *self check input*: LLM screen against the policy in `prompts.yml` (harm, self-harm, explicit content, abuse, semantic jailbreaks that regex can't catch). Blocked → polite refusal, HTTP 200.
+2. **Output rails** —
+   - *regex check output*: blocks leaking API keys (`sk-or-v1-...`, `ghp_...`), private keys, emails, SSNs, card numbers, phone numbers, IBANs.
+   - *self check output*: LLM screen for harmful instructions and system-prompt/passage leaks. Blocked → safe replacement message, HTTP 200.
+
+> Why not NeMo's built-in `jailbreak detection heuristics` (GPT-2-large perplexity) or `sensitive data detection` (Presidio + spaCy `en_core_web_lg`)? Both need ~1.5GB+ of extra models for marginal gain — the regex rails deterministically cover the same attack classes here. To upgrade later: `pip install presidio-analyzer presidio-anonymizer && python -m spacy download en_core_web_lg`, then add `detect sensitive data on input` to `rails.input.flows`.
+
+Behavior & configuration:
+
+| Env var | Default | Meaning |
+|---|---|---|
+| `GUARDRAILS_ENABLED` | `true` | Set `false` to bypass rails entirely |
+| `GUARDRAILS_TIMEOUT` | `10` | Seconds before a rail check gives up and allows the message |
+
+**Fail-open philosophy:** if the rails engine fails to initialize, crashes, or times out, messages are *allowed through* and the error is logged — the persona prompts in `backend/prompts/safety.txt` remain the inner safety layer. The self-check rails reuse the same OpenRouter LLM as the chat (temperature 0).
+
+Test suites (scripted fake LLM, no API key needed):
+
+```bash
+cd backend
+./venv/bin/python tests/test_guardrails.py     # 10 cases: rail mechanics, fail-open, endpoint-level
+./venv/bin/python tests/test_attack_cases.py   # 43 cases: injection, jailbreak tokens, PII leaks, false positives
+```
 
 ## How RAG Works Here
 

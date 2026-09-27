@@ -15,6 +15,7 @@ from openai import (
 )
 
 from chains.chain_router import route_chain
+from chains.guardrails import check_input, check_output
 from schemas.chat import ChatRequest, ChatResponse
 from utils.mentor_loader import load_mentor
 from utils.prompt_builder import build_system_prompt
@@ -56,7 +57,7 @@ def root():
 
 
 @app.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest):
+async def chat(req: ChatRequest):
     try:
         mentor = load_mentor(req.mentor_id)
     except (OSError, ValueError) as e:
@@ -65,6 +66,16 @@ def chat(req: ChatRequest):
             status_code=500,
             detail="Mentor configuration is missing or invalid. Please contact the administrator.",
         )
+
+    # ---- Input rail: check the user's message before doing any work ----
+    try:
+        refusal = await check_input(req.user_message)
+    except Exception:
+        logger.exception("Input rail crashed — allowing message (fail-open)")
+        refusal = None
+    if refusal:
+        logger.info("Input rail blocked a message for mentor '%s'", req.mentor_id)
+        return {"reply": refusal}
 
     try:
         base_prompt = load_file("prompts/base.txt")
@@ -136,6 +147,16 @@ def chat(req: ChatRequest):
             status_code=500,
             detail="Something went wrong on our side. Please try again.",
         )
+
+    # ---- Output rail: screen the mentor's reply before returning it ----
+    try:
+        replacement = await check_output(reply)
+    except Exception:
+        logger.exception("Output rail crashed — allowing reply (fail-open)")
+        replacement = None
+    if replacement:
+        logger.info("Output rail blocked a reply for mentor '%s'", req.mentor_id)
+        reply = replacement
 
     return {"reply": reply}
 
