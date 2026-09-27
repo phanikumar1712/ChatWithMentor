@@ -1,4 +1,5 @@
- import os
+import os
+
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
@@ -10,4 +11,14 @@ embeddings = HuggingFaceEmbeddings(
 )
 
 def get_retriever(mentor_id: str):
-    persist_dir = os.path.join(DB_DIR,
+    persist_dir = os.path.join(DB_DIR, f"{mentor_id}_chroma")
+
+    if not os.path.exists(persist_dir):
+        return None
+
+    vectorstore = Chroma(
+        persist_directory=persist_dir,
+        embedding_function=embeddings
+    )
+
+    return vectorstore.as_retriever(search_kwargs={"k": 3})

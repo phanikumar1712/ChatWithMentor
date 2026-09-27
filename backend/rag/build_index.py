@@ -15,8 +15,16 @@ embeddings = HuggingFaceEmbeddings(
     model_name="all-MiniLM-L6-v2"
 )
 
+# Maps mentor_id -> source book file (books are not always named after the mentor)
+BOOK_MAP = {
+    "krishna": "gita.txt",
+    "rama": "ramayana.txt",
+    "baahubali": "baahubali.txt",
+}
+
 def build_index(mentor_id: str):
-    book_path = os.path.join(BOOKS_DIR, f"{mentor_id}.txt")
+    book_name = BOOK_MAP.get(mentor_id, f"{mentor_id}.txt")
+    book_path = os.path.join(BOOKS_DIR, book_name)
     persist_dir = os.path.join(DB_DIR, f"{mentor_id}_chroma")
 
     if not os.path.exists(book_path):
@@ -41,5 +49,5 @@ def build_index(mentor_id: str):
     print(f"✅ Vector DB built for {mentor_id}")
 
 if __name__ == "__main__":
-    for mentor in ["krishna", "rama", "bahubali"]:
+    for mentor in ["krishna", "rama", "baahubali"]:
         build_index(mentor)

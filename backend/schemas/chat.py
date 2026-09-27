@@ -1,18 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
 
 class ChatRequest(BaseModel):
-    mentor_id: str
-    user_message: str
+    mentor_id: str = Field(min_length=1, max_length=64)
+    user_message: str = Field(min_length=1, max_length=4000)
+
 
 class ChatResponse(BaseModel):
     reply: str
-
-
-# from pydantic import BaseModel
-
-# class ChatRequest(BaseModel):
-#     mentor_id: str
-#     user_message: str
-
-# class ChatResponse(BaseModel):
-#     reply: str

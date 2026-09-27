@@ -6,7 +6,7 @@ import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import MessageBubble from "./MessageBubble";
 import TypingIndicator from "./TypingIndicator";
-import api from "../../services/api";
+import api, { getFriendlyErrorMessage } from "../../services/api";
 
 export default function ChatWindow({
   mentorId,
@@ -36,10 +36,10 @@ export default function ChatWindow({
         ...prev,
         { from: "mentor", text: res.data.reply }
       ]);
-    } catch {
+    } catch (error) {
       setMessages(prev => [
         ...prev,
-        { from: "mentor", text: "Something went wrong." }
+        { from: "mentor", text: getFriendlyErrorMessage(error) }
       ]);
     } finally {
       setTyping(false);
